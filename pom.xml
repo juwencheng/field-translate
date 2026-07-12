@@ -13,16 +13,6 @@
     <description>Spring Boot 通用字段翻译框架</description>
     <url>https://github.com/juwencheng/field-translate</url>
 
-    <modules>
-        <module>field-translate-spring-boot-core</module>
-        <module>field-translate-spring-boot-jackson</module>
-        <module>field-translate-spring-boot-autoconfigure</module>
-        <module>field-translate-dict</module>
-        <module>field-translate-spring-boot-openapi</module>
-        <module>field-translate-spring-boot-starter</module>
-        <module>field-translate-spring-boot-test-app</module>
-    </modules>
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -100,8 +90,19 @@
     <scm>
         <connection>scm:git:git://github.com/juwencheng/field-translate.git</connection>
         <developerConnection>scm:git:ssh://github.com:juwencheng/field-translate.git</developerConnection>
-        <url>https://github.com/juwencheng/field-translate</url>
+        <url>https://github.com/juwencheng/field-translate/tree/main</url>
     </scm>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <build>
         <pluginManagement>
@@ -117,6 +118,38 @@
                     </configuration>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <version>3.3.0</version>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.5.0</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <charset>UTF-8</charset>
+                        <docencoding>UTF-8</docencoding>
+                        <doclint>none</doclint>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${springboot.version}</version>
@@ -124,5 +157,81 @@
             </plugins>
         </pluginManagement>
     </build>
+
+    <profiles>
+        <profile>
+            <id>default</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <modules>
+                <module>field-translate-spring-boot-core</module>
+                <module>field-translate-spring-boot-jackson</module>
+                <module>field-translate-spring-boot-autoconfigure</module>
+                <module>field-translate-dict</module>
+                <module>field-translate-spring-boot-openapi</module>
+                <module>field-translate-spring-boot-starter</module>
+                <module>field-translate-spring-boot-test-app</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>deploy</id>
+            <modules>
+                <module>field-translate-spring-boot-core</module>
+                <module>field-translate-spring-boot-jackson</module>
+                <module>field-translate-spring-boot-autoconfigure</module>
+                <module>field-translate-dict</module>
+                <module>field-translate-spring-boot-openapi</module>
+                <module>field-translate-spring-boot-starter</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>release</id>
+            <modules>
+                <module>field-translate-spring-boot-core</module>
+                <module>field-translate-spring-boot-jackson</module>
+                <module>field-translate-spring-boot-autoconfigure</module>
+                <module>field-translate-dict</module>
+                <module>field-translate-spring-boot-openapi</module>
+                <module>field-translate-spring-boot-starter</module>
+            </modules>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>3.0.1</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                                <configuration>
+                                    <gpgArguments>
+                                        <arg>--pinentry-mode</arg>
+                                        <arg>loopback</arg>
+                                    </gpgArguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.central</groupId>
+                        <artifactId>central-publishing-maven-plugin</artifactId>
+                        <version>0.8.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <excludeArtifacts>
+                                <excludeArtifact>io.github.juwencheng:field-translate-spring-boot-test-app</excludeArtifact>
+                            </excludeArtifacts>
+                            <publishingServerId>ossrh</publishingServerId>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
