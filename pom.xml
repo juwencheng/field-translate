@@ -18,6 +18,7 @@
         <module>field-translate-spring-boot-jackson</module>
         <module>field-translate-spring-boot-autoconfigure</module>
         <module>field-translate-dict</module>
+        <module>field-translate-spring-boot-openapi</module>
         <module>field-translate-spring-boot-starter</module>
         <module>field-translate-spring-boot-test-app</module>
     </modules>
@@ -61,8 +62,18 @@
             </dependency>
             <dependency>
                 <groupId>io.github.juwencheng</groupId>
+                <artifactId>field-translate-spring-boot-openapi</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.github.juwencheng</groupId>
                 <artifactId>field-translate-spring-boot-starter</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+                <version>${springdoc.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.springdoc</groupId>
